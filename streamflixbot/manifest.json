@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "StreamFlix AutoClose",
+  "version": "1.0",
+  "permissions": ["tabs"],
+  "content_scripts": [{
+    "matches": ["*://streamflix.mom/*"],
+    "js": ["content.js"]
+  }],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
