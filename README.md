@@ -1,4 +1,12 @@
 # streamflixbot
+
+Script d'automatisation pour collecter les coins.
+
+## Script AutoCoins
+
+Copiez le code ci-dessous et collez-le dans la console de votre navigateur (F12 -> Onglet Console) :
+
+```javascript
 (function autoCoins() {
   let count = 0;
   let running = true;
@@ -17,7 +25,6 @@
   }
 
   async function clickCycle() {
-    // ÉTAPE 1 : Bouton "Regarder une pub" — sélecteur exact
     const pubBtn = await waitFor(() =>
       Array.from(document.querySelectorAll('button'))
         .find(el => el.className.includes('bg-amber-500/10') && /regarder une pub/i.test(el.textContent))
@@ -26,7 +33,6 @@
     pubBtn.click();
     console.log(`[AutoCoins] ✅ Cycle ${++count} — Clic "Regarder une pub"`);
 
-    // ÉTAPE 2 : Attendre le lien "Ouvrir la pub dans un nouvel onglet"
     const openLink = await waitFor(() =>
       Array.from(document.documentElement.querySelectorAll('a'))
         .find(el => /ouvrir la pub/i.test(el.textContent.trim()))
@@ -40,7 +46,6 @@
       return;
     }
 
-    // Intercepter window.open
     const origOpen = window.open;
     let newTab = null;
     window.open = (...args) => { newTab = origOpen.apply(window, args); return newTab; };
@@ -50,7 +55,6 @@
     await sleep(2500);
     window.open = origOpen;
 
-    // ÉTAPE 3 : Fermer le nouvel onglet
     if (newTab && !newTab.closed) {
       newTab.close();
       console.log('[AutoCoins] ❌ Onglet fermé');
@@ -58,7 +62,6 @@
       console.warn('[AutoCoins] ⚠️ Onglet non fermé — active les popups pour streamflix.mom');
     }
 
-    // ÉTAPE 4 : Fermer le modal
     await sleep(500);
     const closeBtn = Array.from(document.documentElement.querySelectorAll('button'))
       .find(b => b.textContent.trim() === 'Fermer');
